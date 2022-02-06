@@ -1,0 +1,22 @@
+{
+  "name": "air-quality-monitor",
+  "version": "0.1.0",
+  "description": "Air quality monitor using SCD30 CO2 sensor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/programmer24601/air-quality-monitor.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/programmer24601/air-quality-monitor/issues"
+  },
+  "homepage": "https://github.com/programmer24601/air-quality-monitor#readme",
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  }
+}
