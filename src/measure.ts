@@ -1,10 +1,5 @@
 import { SCD30 } from "scd30-node";
-
-type Measurement = {
-  co2Concentration: number;
-  temperature: number;
-  relativeHumidity: number;
-};
+import { Measurement } from "./types/Measurement";
 
 export const measure = async (): Promise<Measurement> => {
   const scd30 = await SCD30.connect();
