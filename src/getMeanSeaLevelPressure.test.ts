@@ -1,12 +1,17 @@
-import { getPressure } from "./getPressure";
+import { getMeanSeaLevelPressure } from "./getMeanSeaLevelPressure";
 
 describe("getPressure", () => {
   global.fetch = jest.fn().mockResolvedValue({
     ok: true,
     json: async () => hourlyObservations
   } as Response);
+
   it("should return the latest pressure reading adjusted for current location", async () => {
-    await getPressure();
+    const siteId = "3344";
+    const localPressure = await getMeanSeaLevelPressure(siteId);
+
+    const expectedPressure = "1004";
+    expect(localPressure).toEqual(expectedPressure);
   });
 });
 
@@ -24,6 +29,25 @@ const hourlyObservations = {
         continent: "EUROPE",
         elevation: "262.0",
         Period: [
+          {
+            type: "Day",
+            value: "2022-02-05Z",
+            Rep: [
+              {
+                D: "WNW",
+                G: "47",
+                H: "81.8",
+                P: "999",
+                S: "17",
+                T: "3.3",
+                V: "45000",
+                W: "8",
+                Pt: "R",
+                Dp: "0.5",
+                $: "960"
+              }
+            ]
+          },
           {
             type: "Day",
             value: "2022-02-06Z",

@@ -4,8 +4,8 @@ import { Site } from "./types/Site";
 export const findNearestObservationSite = async (): Promise<string> => {
   const apiKey = process.env.MET_OFFICE_DATAPOINT_API_KEY!;
   const currentLocation: Site = {
-    latitude: process.env.CURRENT_LATITUDE!,
-    longitude: process.env.CURRENT_LONGITUDE!
+    latitude: process.env.LOCAL_LATITUDE!,
+    longitude: process.env.LOCAL_LONGITUDE!
   };
 
   const response = await fetch(constructUrl(apiKey).toString(), {
