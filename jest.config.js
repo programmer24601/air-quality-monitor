@@ -3,6 +3,7 @@ module.exports = {
     setupFiles: ['<rootDir>/.jest/setupEnvironment.js'],
     collectCoverageFrom: [
         '**/*.ts',
+        '!src/index.ts',
         '!bin/*.ts',
         '!**/*.test.ts',
         '!dist/*.ts',

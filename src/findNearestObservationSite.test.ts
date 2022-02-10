@@ -9,7 +9,7 @@ describe("findNearestObservationSite", () => {
   it("should return the nearest observation to the current location", async () => {
     const nearestObservationSiteId = await findNearestObservationSite();
 
-    expect(nearestObservationSiteId).toEqual("3266");
+    expect(nearestObservationSiteId).toEqual("3088");
   });
 });
 

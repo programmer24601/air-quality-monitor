@@ -17,9 +17,25 @@ const mockStaticConnect = jest.fn().mockImplementation(() => {
 
 SCD30.connect = mockStaticConnect;
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 describe("measure", () => {
-  it("should connect to scd30 and get measurements", async () => {
+  it("should connect to scd30 and get measurements when pressure is not provided", async () => {
     const measurement = await measure();
+
+    expect(SCD30.connect).toBeCalledTimes(1);
+
+    expect(measurement).toEqual({
+      co2Concentration: 450,
+      temperature: 20,
+      relativeHumidity: 45
+    });
+  });
+
+  it("should connect to scd30 and get measurements when pressure is provided", async () => {
+    const measurement = await measure(1030);
 
     expect(SCD30.connect).toBeCalledTimes(1);
 
