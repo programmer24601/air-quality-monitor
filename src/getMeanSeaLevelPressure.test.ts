@@ -1,12 +1,18 @@
 import { getMeanSeaLevelPressure } from "./getMeanSeaLevelPressure";
+import fetch, { Response } from "node-fetch";
+import { mocked } from "jest-mock";
+
+jest.mock("node-fetch", () => jest.fn());
 
 describe("getPressure", () => {
-  global.fetch = jest.fn().mockResolvedValue({
-    ok: true,
-    json: async () => hourlyObservations
-  } as Response);
-
   it("should return the latest pressure reading adjusted for current location", async () => {
+    const response: Partial<Response> = {
+      ok: true,
+      json: async () => hourlyObservations
+    };
+
+    mocked(fetch).mockResolvedValue(response as Response);
+
     const siteId = "3344";
     const localPressure = await getMeanSeaLevelPressure(siteId);
 

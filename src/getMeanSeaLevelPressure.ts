@@ -1,3 +1,5 @@
+import fetch from "node-fetch";
+
 export const getMeanSeaLevelPressure = async (siteId: string): Promise<number> => {
   const response = await fetch(constructUrl(siteId).toString(), {
     method: "GET"
@@ -6,7 +8,6 @@ export const getMeanSeaLevelPressure = async (siteId: string): Promise<number> =
   const latestObservations = await response.json();
 
   return extractLatestMeanSeaLevelPressure(latestObservations);
-
 };
 
 const constructUrl = (siteId: string): URL => {
@@ -24,5 +25,3 @@ const constructUrl = (siteId: string): URL => {
 const extractLatestMeanSeaLevelPressure = (latestObservations: any): number => {
   return latestObservations.SiteRep.DV.Location.Period.at(-1).Rep.at(-1).P;
 };
-
-

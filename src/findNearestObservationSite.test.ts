@@ -1,12 +1,18 @@
 import { findNearestObservationSite } from "./findNearestObservationSite";
+import fetch, { Response } from "node-fetch";
+import { mocked } from "jest-mock";
+
+jest.mock("node-fetch", () => jest.fn());
 
 describe("findNearestObservationSite", () => {
-  global.fetch = jest.fn().mockResolvedValue({
-    ok: true,
-    json: async () => observationSites
-  } as Response);
-
   it("should return the nearest observation to the current location", async () => {
+    const response: Partial<Response> = {
+      ok: true,
+      json: async () => observationSites
+    };
+
+    mocked(fetch).mockResolvedValue(response as Response);
+
     const nearestObservationSiteId = await findNearestObservationSite();
 
     expect(nearestObservationSiteId).toEqual("3088");

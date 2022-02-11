@@ -1,5 +1,6 @@
 import { ObservationSites } from "./types/ObservationSites";
 import { Site } from "./types/Site";
+import fetch from "node-fetch";
 
 export const findNearestObservationSite = async (): Promise<string> => {
   const apiKey = process.env.MET_OFFICE_DATAPOINT_API_KEY!;
