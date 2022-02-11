@@ -4,6 +4,9 @@ import { getMeanSeaLevelPressure } from "./getMeanSeaLevelPressure";
 import { measure } from "./measure";
 import { Measurement } from "./types/Measurement";
 import { writeToInfluxDb } from "./writeToInfluxDb";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 (async () => {
   try {
