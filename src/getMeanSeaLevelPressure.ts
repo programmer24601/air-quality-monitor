@@ -7,8 +7,10 @@ export const getMeanSeaLevelPressure = async (siteId: string): Promise<number> =
   });
 
   const latestObservations = await response.json();
-
-  return extractLatestMeanSeaLevelPressure(latestObservations);
+  const meanSeaLevelPressure = extractLatestMeanSeaLevelPressure(latestObservations);
+  console.log(meanSeaLevelPressure);
+  
+  return meanSeaLevelPressure;
 };
 
 const constructUrl = (siteId: string, apiKey: string): URL => {

@@ -4,8 +4,10 @@ import fetch from "node-fetch";
 
 export const writeToInfluxDb = async (measurement: Measurement): Promise<void> => {
   const influxDbParams = getInfluxDbParams();
+  const url = constructUrl(influxDbParams).toString();
+  console.log(url);
 
-  const response = await fetch(constructUrl(influxDbParams).toString(), {
+  const response = await fetch(url, {
     method: "POST",
     body: convertMeasurementToLineProtocolFormat(measurement),
     headers: { "Content-Type": "text/plain", Authorization: `Token ${influxDbParams.apiKey}` }
@@ -19,8 +21,8 @@ const getInfluxDbParams = (): InfluxDbParams => {
     baseUrl: process.env.INFLUXDB_BASE_URL!,
     apiKey: process.env.INFLUXDB_API_KEY!,
     organisation: process.env.INFLUXDB_ORG_NAME!,
-    bucketName: process.env.BUCKET_NAME!,
-    measurementName: process.env.MEASUREMENT_NAME!
+    bucketName: process.env.INFLUXDB_BUCKET_NAME!,
+    measurementName: process.env.INFLUXDB_MEASUREMENT_NAME!
   };
 };
 
