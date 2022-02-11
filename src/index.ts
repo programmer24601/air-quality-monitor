@@ -1,5 +1,5 @@
 import { calculateLocalPressure } from "./calculateLocalPressure";
-import { findNearestObservationSite } from "./findNearestObservationSite";
+// import { findNearestObservationSite } from "./findNearestObservationSite";
 import { getMeanSeaLevelPressure } from "./getMeanSeaLevelPressure";
 import { measure } from "./measure";
 import { Measurement } from "./types/Measurement";
@@ -14,7 +14,8 @@ dotenv.config();
 
     const measurementWithoutPressureCorrection = await measure();
 
-    const nearestObservationSite = await findNearestObservationSite();
+    // const nearestObservationSite = await findNearestObservationSite();
+    const nearestObservationSite = process.env.MET_OFFICE_OBSERVATION_SITE!;
     const meanSeaLevelPressure = await getMeanSeaLevelPressure(nearestObservationSite);
     const localPressure = calculateLocalPressure(
       meanSeaLevelPressure,
