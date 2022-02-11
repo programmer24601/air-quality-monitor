@@ -5,11 +5,13 @@ import fetch from "node-fetch";
 export const writeToInfluxDb = async (measurement: Measurement): Promise<void> => {
   const influxDbParams = getInfluxDbParams();
 
-  await fetch(constructUrl(influxDbParams).toString(), {
+  const response = await fetch(constructUrl(influxDbParams).toString(), {
     method: "POST",
     body: convertMeasurementToLineProtocolFormat(measurement),
     headers: { "Content-Type": "text/plain", Authorization: `Token ${influxDbParams.apiKey}` }
   });
+
+  console.log(response.status, response.statusText);
 };
 
 const getInfluxDbParams = (): InfluxDbParams => {
