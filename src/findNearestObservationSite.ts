@@ -1,5 +1,4 @@
-import { ObservationSites } from "./types/ObservationSites";
-import { Site } from "./types/Site";
+import { ObservationSites, Site } from "./types/ObservationSites";
 import fetch from "node-fetch";
 
 export const findNearestObservationSite = async (): Promise<string> => {
