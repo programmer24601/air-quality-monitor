@@ -26,6 +26,7 @@
   "dependencies": {
     "dotenv": "^16.0.0",
     "node-fetch": "^2.6.7",
+    "raspberrypi-liquid-crystal": "^1.18.0",
     "scd30-node": "^1.0.3"
   }
 }

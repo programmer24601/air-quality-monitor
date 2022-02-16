@@ -29,6 +29,7 @@ describe("measure", () => {
 
     expect(measurement).toEqual({
       co2Concentration: 450,
+      pressure: 0,
       temperature: 20,
       relativeHumidity: 45
     });
@@ -41,6 +42,7 @@ describe("measure", () => {
 
     expect(measurement).toEqual({
       co2Concentration: 450,
+      pressure: 1030,
       temperature: 20,
       relativeHumidity: 45
     });

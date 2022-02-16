@@ -16,5 +16,5 @@ export const measure = async (pressure?: number): Promise<MeasurementData> => {
 
   await scd30.disconnect();
 
-  return measurement;
+  return { ...measurement, pressure: pressure ?? 0 };
 };

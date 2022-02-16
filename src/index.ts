@@ -5,6 +5,7 @@ import { measure } from "./measure";
 import { Measurement } from "./types/Measurement";
 import { writeToInfluxDb } from "./writeToInfluxDb";
 import dotenv from "dotenv";
+import { writeToDisplay } from "./writeToDisplay";
 
 dotenv.config();
 
@@ -32,10 +33,12 @@ dotenv.config();
     };
 
     await writeToInfluxDb(measurement);
+    await writeToDisplay(measurement.data);
 
     console.log(`CO2 Concentration: ${measurementWithPressureCorrection.co2Concentration} ppm`);
     console.log(`Temperature: ${measurementWithPressureCorrection.temperature} °C`);
     console.log(`Humidity: ${measurementWithPressureCorrection.relativeHumidity} %`);
+    console.log(`Pressure: ${measurementWithPressureCorrection.pressure} hPa`);
   } catch (error: unknown) {
     console.error((error as Error).message);
   }

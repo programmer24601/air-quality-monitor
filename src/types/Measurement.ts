@@ -2,6 +2,7 @@ export type MeasurementData = {
   co2Concentration: number;
   temperature: number;
   relativeHumidity: number;
+  pressure: number;
 };
 
 export type Measurement = {
