@@ -2,7 +2,9 @@ declare module "raspberrypi-liquid-crystal" {
   type LCDCallback = (err: Error) => void;
 
   export default class LCD {
-    constructor(bus: number, address: number, width: number, heigth: number);
+    constructor(bus: number, address: number, width: number, height: number);
+
+    static getChar(charId: number): string;
 
     begin(): Promise<void>;
     beginSync(): void;
