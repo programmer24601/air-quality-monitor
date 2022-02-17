@@ -38,7 +38,7 @@ describe("measure", () => {
     await writeToDisplay(measurementData);
 
     expect(mockPrintLine).toBeCalledTimes(4);
-    expect(mockPrintLine).toHaveBeenNthCalledWith(1, 0, `T: 19.50 °C`);
+    expect(mockPrintLine).toHaveBeenNthCalledWith(1, 0, `T: 19.50  C`);
     expect(mockPrintLine).toHaveBeenNthCalledWith(2, 1, `RH: 45.00 %`);
     expect(mockPrintLine).toHaveBeenNthCalledWith(3, 2, `P: 1020.00 hPa`);
     expect(mockPrintLine).toHaveBeenNthCalledWith(4, 3, `CO2: 850.00 ppm`);
@@ -47,7 +47,7 @@ describe("measure", () => {
     expect(mockCreateChar).toHaveBeenCalledWith(0, [0x1c, 0x14, 0x1c, 0x0, 0x0, 0x0, 0x0, 0x0]);
 
     expect(mockSetCursor).toBeCalledTimes(1);
-    expect(mockSetCursor).toHaveBeenCalledWith(0, 8);
+    expect(mockSetCursor).toHaveBeenCalledWith(9, 0);
 
     expect(mockPrint).toHaveBeenCalledTimes(1);
     expect(mockPrint).toHaveBeenCalledWith('string');

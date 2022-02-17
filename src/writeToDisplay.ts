@@ -14,14 +14,14 @@ export const writeToDisplay = async (measurementData: MeasurementData): Promise<
 
   const data = formatMeasurementData(measurementData);
 
-  await lcd.printLine(0, `T: ${data.temperature} °C`);
+  await lcd.printLine(0, `T: ${data.temperature}  C`);
   await lcd.printLine(1, `RH: ${data.relativeHumidity} %`);
   await lcd.printLine(2, `P: ${data.pressure} hPa`);
   await lcd.printLine(3, `CO2: ${data.co2Concentration} ppm`);
 
   const degreeSymbol = [0x1c, 0x14, 0x1c, 0x0, 0x0, 0x0, 0x0, 0x0];
   await lcd.createChar(0, degreeSymbol);
-  await lcd.setCursor(0, 8);
+  await lcd.setCursor(9, 0);
   await lcd.print(LCD.getChar(0));
 };
 
