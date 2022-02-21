@@ -10,10 +10,12 @@ export const readScd30 = async (pressure?: number): Promise<MeasurementData> => 
     await scd30.startContinuousMeasurement();
   }
 
-  while (!scd30.isDataReady) {
+  while (!(await scd30.isDataReady())) {
+    console.debug("data not ready");
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }
 
+  console.debug("data is ready, reading sensor...");
   const measurement = await scd30.readMeasurement();
 
   await scd30.disconnect();

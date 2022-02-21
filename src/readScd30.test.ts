@@ -1,17 +1,22 @@
 import { readScd30 } from "./readScd30";
 import { SCD30 } from "scd30-node";
+import { mocked } from "jest-mock";
 
 jest.mock("scd30-node");
+jest.spyOn(global, "setTimeout");
+
+const isDataReady = jest.fn().mockResolvedValue(true);
 
 const mockStaticConnect = jest.fn().mockImplementation(() => {
   return {
-    startContinuousMeasurement: jest.fn().mockReturnThis(),
+    startContinuousMeasurement: jest.fn(),
     readMeasurement: jest.fn().mockResolvedValue({
       co2Concentration: 450,
       temperature: 20,
       relativeHumidity: 45
     }),
-    disconnect: jest.fn().mockReturnThis()
+    disconnect: jest.fn(),
+    isDataReady
   };
 });
 
@@ -46,5 +51,14 @@ describe("readScd30", () => {
       temperature: 20,
       relativeHumidity: 45
     });
+  });
+
+  it("should call setTimeout when data is not ready", async () => {
+    jest.setTimeout(10000);
+
+    mocked(isDataReady).mockResolvedValueOnce(false).mockResolvedValueOnce(true);
+    await readScd30(1030);
+
+    expect(setTimeout).toHaveBeenCalledTimes(1);
   });
 });
