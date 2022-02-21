@@ -4,6 +4,7 @@ module.exports = {
     collectCoverageFrom: [
         '**/*.ts',
         '!src/index.ts',
+        '!src/utils/**',
         '!bin/*.ts',
         '!**/*.test.ts',
         '!dist/*.ts',
