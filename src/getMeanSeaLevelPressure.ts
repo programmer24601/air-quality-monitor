@@ -8,7 +8,7 @@ export const getMeanSeaLevelPressure = async (siteId: string): Promise<number> =
 
   const latestObservations = await response.json();
   const meanSeaLevelPressure = extractLatestMeanSeaLevelPressure(latestObservations);
-  console.log(meanSeaLevelPressure);
+  console.log(`MSLP: ${meanSeaLevelPressure} hPa`);
   
   return meanSeaLevelPressure;
 };

@@ -11,7 +11,7 @@ export const readScd30 = async (pressure?: number): Promise<MeasurementData> => 
   }
 
   while (!(await scd30.isDataReady())) {
-    console.log("data not ready");
+    console.log("SCD30 data not ready");
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }
 

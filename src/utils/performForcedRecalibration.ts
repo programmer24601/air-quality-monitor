@@ -14,12 +14,12 @@ const outdoorCo2Concentration = parseInt(process.env.OUTDOOR_CO2_CONCENTRATION!,
 
 const readMeasurements = async (scd30: SCD30) => {
   while (!(await scd30.isDataReady())) {
-    console.log("data not ready");
+    console.log("SCD30 data not ready");
     await new Promise((resolve) => setTimeout(resolve, dataReadinessWaitPeriod));
   }
 
   const measurement = await scd30.readMeasurement();
-  console.log(`co2 concentration = ${measurement.co2Concentration} ppm`);
+  console.log(`CO2 Concentration = ${measurement.co2Concentration} ppm`);
 
   const measurementWithPressure: Measurement = {
     name: process.env.INFLUXDB_MEASUREMENT_NAME!,
@@ -48,7 +48,7 @@ const readMeasurements = async (scd30: SCD30) => {
       await readMeasurements(scd30);
     }
 
-    console.log("recalibrating...");
+    console.log("Recalibrating...");
     await scd30.setForcedRecalibrationValue(outdoorCo2Concentration);
 
     keepCalling = true;
