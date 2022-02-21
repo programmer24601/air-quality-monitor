@@ -1,4 +1,4 @@
-import { measure } from "./measure";
+import { readScd30 } from "./readScd30";
 import { SCD30 } from "scd30-node";
 
 jest.mock("scd30-node");
@@ -21,9 +21,9 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe("measure", () => {
+describe("readScd30", () => {
   it("should connect to scd30 and get measurements when pressure is not provided", async () => {
-    const measurement = await measure();
+    const measurement = await readScd30();
 
     expect(SCD30.connect).toBeCalledTimes(1);
 
@@ -36,7 +36,7 @@ describe("measure", () => {
   });
 
   it("should connect to scd30 and get measurements when pressure is provided", async () => {
-    const measurement = await measure(1030);
+    const measurement = await readScd30(1030);
 
     expect(SCD30.connect).toBeCalledTimes(1);
 

@@ -1,7 +1,7 @@
 import { SCD30 } from "scd30-node";
 import { MeasurementData } from "./types/Measurement";
 
-export const measure = async (pressure?: number): Promise<MeasurementData> => {
+export const readScd30 = async (pressure?: number): Promise<MeasurementData> => {
   const scd30 = await SCD30.connect();
 
   if (pressure) {

@@ -23,7 +23,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe("measure", () => {
+describe("writeToDisplay", () => {
   it("should connect to display and print out measurements", async () => {
     const mockGetChar = jest.fn().mockReturnValue('string')
 
