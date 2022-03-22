@@ -36,9 +36,7 @@ const constructUrl = (influxDbParams: InfluxDbParams): URL => {
 
 const convertMeasurementToLineProtocolFormat = (measurement: Measurement): string => {
   const measurementData = Object.entries(measurement.data)
-    .reduce((accumulator: Array<string>, [key, value]) => {
-      return [...accumulator, `${camelToSnakeCase(key)}=${value}`];
-    }, [])
+    .map(([key, value]) => `${camelToSnakeCase(key)}=${value}`)
     .join(",");
 
   return `${measurement.name},${measurement.tagKey}=${measurement.tagValue} ${measurementData}`;
