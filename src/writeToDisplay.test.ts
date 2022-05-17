@@ -6,11 +6,16 @@ const mockPrint = jest.fn();
 const mockPrintLine = jest.fn();
 const mockSetCursor = jest.fn();
 const mockCreateChar = jest.fn();
+const mockNoDisplay = jest.fn();
+const mockDisplay = jest.fn();
+
 jest.mock("raspberrypi-liquid-crystal", () => {
   return jest.fn().mockImplementation(() => {
     return {
       begin: jest.fn(),
       clear: jest.fn(),
+      noDisplay: mockNoDisplay,
+      display: mockDisplay,
       print: mockPrint,
       printLine: mockPrintLine,
       setCursor: mockSetCursor,
@@ -24,17 +29,18 @@ afterEach(() => {
 });
 
 describe("writeToDisplay", () => {
+  const measurementData: MeasurementData = {
+    co2Concentration: 850,
+    temperature: 19.5,
+    relativeHumidity: 45,
+    pressure: 1020
+  };
+
   it("should connect to display and print out measurements", async () => {
-    const mockGetChar = jest.fn().mockReturnValue('string')
+    const mockGetChar = jest.fn().mockReturnValue("string");
 
-    LCD.getChar = mockGetChar
+    LCD.getChar = mockGetChar;
 
-    const measurementData: MeasurementData = {
-      co2Concentration: 850,
-      temperature: 19.5,
-      relativeHumidity: 45,
-      pressure: 1020
-    };
     await writeToDisplay(measurementData);
 
     expect(mockPrintLine).toBeCalledTimes(4);
@@ -50,6 +56,24 @@ describe("writeToDisplay", () => {
     expect(mockSetCursor).toHaveBeenCalledWith(9, 0);
 
     expect(mockPrint).toHaveBeenCalledTimes(1);
-    expect(mockPrint).toHaveBeenCalledWith('string');
+    expect(mockPrint).toHaveBeenCalledWith("string");
+  });
+
+  it("should turn off display when it is night time", async () => {
+    jest.useFakeTimers().setSystemTime(new Date("2022-05-17T03:24:00"));
+
+    await writeToDisplay(measurementData);
+
+    expect(mockNoDisplay).toBeCalledTimes(1);
+    expect(mockDisplay).not.toBeCalled();
+  });
+
+  it("should turn off display when it is night time", async () => {
+    jest.useFakeTimers().setSystemTime(new Date("2022-05-17T14:24:00"));
+
+    await writeToDisplay(measurementData);
+
+    expect(mockDisplay).toBeCalledTimes(1);
+    expect(mockNoDisplay).not.toBeCalled();
   });
 });

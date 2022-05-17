@@ -12,6 +12,12 @@ export const writeToDisplay = async (measurementData: MeasurementData): Promise<
   await lcd.begin();
   await lcd.clear();
 
+  if (isItNightTime() === true) {
+    await lcd.noDisplay();
+  } else {
+    await lcd.display();
+  }
+
   const data = formatMeasurementData(measurementData);
 
   await lcd.printLine(0, `T: ${data.temperature}  C`);
@@ -32,4 +38,11 @@ const formatMeasurementData = (measurementData: MeasurementData) => {
     pressure: measurementData.pressure.toFixed(2).toString(),
     co2Concentration: measurementData.co2Concentration.toFixed(2).toString()
   };
+};
+
+const isItNightTime = (): boolean => {
+  const now = new Date();
+  const hour = now.getHours();
+
+  return hour >= 22 || hour < 6 ? true : false;
 };
