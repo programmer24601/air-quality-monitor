@@ -39,7 +39,10 @@ const logSensorReadings = (measurementData: MeasurementData): void => {
       data: measurementWithPressureCorrection
     };
 
-    await writeToInfluxDb(measurement);
+    await writeToInfluxDb(measurement).catch((error): unknown =>
+      console.error("Error: ", error.message)
+    );
+    
     await writeToDisplay(measurement.data);
 
     logSensorReadings(measurementWithPressureCorrection);
