@@ -31,11 +31,11 @@ afterEach(() => {
 
 describe("writeToDisplay", () => {
   const measurementData: MeasurementData = {
-    co2Concentration: 850,
-    scd30Temperature: 19.5,
-    bmp280Temperature: 19.0,
-    relativeHumidity: 45,
-    meanSeaLevelPressure: 1020
+    co2Concentration: 988.3440551757812,
+    scd30Temperature: 23.958572387695312,
+    bmp280Temperature: 22.810765738325426,
+    relativeHumidity: 51.4404296875,
+    meanSeaLevelPressure: 983.1633687965099
   };
 
   it("should connect to display and print out measurements", async () => {
@@ -45,10 +45,10 @@ describe("writeToDisplay", () => {
     await writeToDisplay(measurementData);
 
     expect(mockPrintLine).toBeCalledTimes(4);
-    expect(mockPrintLine).toHaveBeenNthCalledWith(1, 0, `T: 19.50, 19.00  C`);
-    expect(mockPrintLine).toHaveBeenNthCalledWith(2, 1, `RH: 45.00 %`);
-    expect(mockPrintLine).toHaveBeenNthCalledWith(3, 2, `MSLP: 1020.00 hPa`);
-    expect(mockPrintLine).toHaveBeenNthCalledWith(4, 3, `CO2: 850.00 ppm`);
+    expect(mockPrintLine).toHaveBeenNthCalledWith(1, 0, `T: 23.96, 22.81  C`);
+    expect(mockPrintLine).toHaveBeenNthCalledWith(2, 1, `RH: 51.44 %`);
+    expect(mockPrintLine).toHaveBeenNthCalledWith(3, 2, `MSLP: 983.16 hPa`);
+    expect(mockPrintLine).toHaveBeenNthCalledWith(4, 3, `CO2: 988.34 ppm`);
 
     expect(mockCreateChar).toBeCalledTimes(1);
     expect(mockCreateChar).toHaveBeenCalledWith(0, [0x1c, 0x14, 0x1c, 0x0, 0x0, 0x0, 0x0, 0x0]);

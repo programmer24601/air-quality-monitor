@@ -19,5 +19,5 @@ export const calculateMeanSeaLevelPressure = (
 };
 
 const convertFromPaToHPa = (pressureInPa: number): number => {
-  return Math.round(pressureInPa) / 100;
+  return pressureInPa / 100;
 };
