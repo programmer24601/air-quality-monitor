@@ -1,7 +1,7 @@
 
 import { readScd30 } from "./readScd30";
 import { Measurement, MeasurementData } from "./types/Measurement";
-// import { writeToInfluxDb } from "./writeToInfluxDb";
+import { writeToInfluxDb } from "./writeToInfluxDb";
 import dotenv from "dotenv";
 import { writeToDisplay } from "./writeToDisplay";
 import { readBmp280 } from "./readBmp280";
@@ -39,9 +39,9 @@ const logSensorReadings = (measurementData: MeasurementData): void => {
       data: measurementData
     };
 
-    // await writeToInfluxDb(measurement).catch((error): unknown =>
-    //   console.error("Error: ", error.message)
-    // );
+    await writeToInfluxDb(measurement).catch((error): unknown =>
+      console.error("Error: ", error.message)
+    );
     
     await writeToDisplay(measurement.data);
 
