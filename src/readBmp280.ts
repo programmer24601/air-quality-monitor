@@ -14,9 +14,11 @@ export const readBmp280 = async (): Promise<Bmp280MeasurementData> => {
 
   const temperature = await bmp280.readTemperature();
   const localPressure = await bmp280.readPressure();
-  console.log(`Pressure: ${localPressure} Pa`);
+
+  const localPressureInHPa = localPressure / 100;
+  console.log(`Pressure: ${localPressureInHPa} Pa`);
 
   await bus.close();
 
-  return { temperature, localPressure };
+  return { temperature, localPressure: localPressureInHPa };
 };

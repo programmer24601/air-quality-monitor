@@ -1,13 +1,10 @@
 import { SCD30 } from "scd30-node";
-import { convertFromPaToHPa } from "./calculateMeanSeaLevelPressure";
 import { Scd30MeasurementData } from "./types/Measurement";
 
-export const readScd30 = async (localPressureInPa: number): Promise<Scd30MeasurementData> => {
+export const readScd30 = async (localPressure: number): Promise<Scd30MeasurementData> => {
   const scd30 = await SCD30.connect();
 
-  const localPressureInHPa = convertFromPaToHPa(localPressureInPa);
-
-  await scd30.startContinuousMeasurement(localPressureInHPa);
+  await scd30.startContinuousMeasurement(localPressure);
 
   while (!(await scd30.isDataReady())) {
     console.log("SCD30 data not ready");

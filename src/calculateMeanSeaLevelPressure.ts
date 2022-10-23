@@ -15,11 +15,9 @@ export const calculateMeanSeaLevelPressure = (
   // barometric formula: https://en.wikipedia.org/wiki/Atmospheric_pressure#Altitude_variation
   const p_0 = p / (1 - (g * h) / (c_p * T_0)) ** ((c_p * M) / R_0);
 
-  const meanSeaLevelPressure = convertFromPaToHPa(p_0); // convert Pa to hPa and round to two decimal places
-
-  return meanSeaLevelPressure;
+  return convertFromPaToHPa(p_0); // convert Pa to hPa and round to two decimal places
 };
 
-export const convertFromPaToHPa = (pressureInPa): number => {
+const convertFromPaToHPa = (pressureInPa: number): number => {
   return Math.round(pressureInPa) / 100;
 };
