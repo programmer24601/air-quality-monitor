@@ -4,6 +4,7 @@
   "description": "Air quality monitor using SCD30 CO2 sensor",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "test": "jest --coverage"
   },
   "repository": {
