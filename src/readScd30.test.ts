@@ -1,6 +1,7 @@
 import { readScd30 } from "./readScd30";
 import { SCD30 } from "scd30-node";
 import { mocked } from "jest-mock";
+import { Scd30MeasurementData } from "./types/Measurement";
 
 jest.mock("scd30-node");
 jest.spyOn(global, "setTimeout");
@@ -27,30 +28,18 @@ afterEach(() => {
 });
 
 describe("readScd30", () => {
-  it("should connect to scd30 and get measurements when pressure is not provided", async () => {
-    const measurement = await readScd30();
-
-    expect(SCD30.connect).toBeCalledTimes(1);
-
-    expect(measurement).toEqual({
-      co2Concentration: 450,
-      pressure: 0,
-      temperature: 20,
-      relativeHumidity: 45
-    });
-  });
-
   it("should connect to scd30 and get measurements when pressure is provided", async () => {
-    const measurement = await readScd30(1030);
+    const measurementData = await readScd30(1030);
 
     expect(SCD30.connect).toBeCalledTimes(1);
 
-    expect(measurement).toEqual({
+    const expectedMeasurementData: Scd30MeasurementData = {
       co2Concentration: 450,
-      pressure: 1030,
       temperature: 20,
       relativeHumidity: 45
-    });
+    };
+
+    expect(measurementData).toEqual(expectedMeasurementData);
   });
 
   it("should call setTimeout when data is not ready", async () => {

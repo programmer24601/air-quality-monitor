@@ -1,14 +1,10 @@
 import { SCD30 } from "scd30-node";
-import { MeasurementData } from "./types/Measurement";
+import { Scd30MeasurementData } from "./types/Measurement";
 
-export const readScd30 = async (pressure?: number): Promise<MeasurementData> => {
+export const readScd30 = async (localPressure: number): Promise<Scd30MeasurementData> => {
   const scd30 = await SCD30.connect();
 
-  if (pressure) {
-    await scd30.startContinuousMeasurement(pressure);
-  } else {
-    await scd30.startContinuousMeasurement();
-  }
+  await scd30.startContinuousMeasurement(localPressure);
 
   while (!(await scd30.isDataReady())) {
     console.log("SCD30 data not ready");
@@ -19,5 +15,5 @@ export const readScd30 = async (pressure?: number): Promise<MeasurementData> => 
 
   await scd30.disconnect();
 
-  return { ...measurement, pressure: pressure ?? 0 };
+  return measurement;
 };

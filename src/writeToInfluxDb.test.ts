@@ -15,8 +15,9 @@ describe("writeToInfluxDb", () => {
       data: {
         co2Concentration: 900,
         relativeHumidity: 45,
-        temperature: 20,
-        pressure: 1030
+        scd30Temperature: 20,
+        bmp280Temperature: 19,
+        meanSeaLevelPressure: 1030
       }
     };
     const response = { status: 204, statusText: "No Content" } as unknown as Response;
@@ -28,7 +29,7 @@ describe("writeToInfluxDb", () => {
     expect(fetch).toBeCalledWith(
       "http://localhost:8086/api/v2/write?bucket=data&org=my_organisation&precision=s",
       {
-        body: "measurement,location=office co2_concentration=900,relative_humidity=45,temperature=20,pressure=1030",
+        body: "measurement,location=office co2_concentration=900,relative_humidity=45,scd30_temperature=20,bmp280_temperature=19,mean_sea_level_pressure=1030",
         headers: {
           Authorization: "Token ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
           "Content-Type": "text/plain"
