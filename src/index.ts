@@ -1,7 +1,7 @@
 
 import { readScd30 } from "./readScd30";
 import { Measurement, MeasurementData } from "./types/Measurement";
-import { writeToInfluxDb } from "./writeToInfluxDb";
+// import { writeToInfluxDb } from "./writeToInfluxDb";
 import dotenv from "dotenv";
 import { writeToDisplay } from "./writeToDisplay";
 import { readBmp280 } from "./readBmp280";
