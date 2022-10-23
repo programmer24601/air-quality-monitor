@@ -3,6 +3,9 @@ import { BMP280 } from "async-bmp280";
 import { Bmp280MeasurementData } from "./types/Measurement";
 
 export const readBmp280 = async (): Promise<Bmp280MeasurementData> => {
+
+  const pressureOffset = 6.13354;
+
   const busNumber = 1;
   const bus = Bus({ busNumber });
 
@@ -16,9 +19,9 @@ export const readBmp280 = async (): Promise<Bmp280MeasurementData> => {
   const localPressure = await bmp280.readPressure();
 
   const localPressureInHPa = localPressure / 100;
-  console.log(`Pressure: ${localPressureInHPa} Pa`);
+  console.log(`Pressure: ${localPressureInHPa} hPa`);
 
   await bus.close();
 
-  return { temperature, localPressure: localPressureInHPa };
+  return { temperature, localPressure: localPressureInHPa + pressureOffset };
 };

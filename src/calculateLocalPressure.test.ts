@@ -3,6 +3,7 @@ import { calculateLocalPressure } from "./calculateLocalPressure";
 describe("calculateLocalPressure", () => {
   test.each`
     meanSeaLevelPressure | temperature | localElevation | expectedLocalPressure
+    ${996}               | ${22.52}    | ${60}          | ${989.11}
     ${990}               | ${0}        | ${0}           | ${990}
     ${990}               | ${0}        | ${50}          | ${983.82}
     ${990}               | ${0}        | ${100}         | ${977.67}
