@@ -29,7 +29,7 @@ afterEach(() => {
 
 describe("readScd30", () => {
   it("should connect to scd30 and get measurements when pressure is provided", async () => {
-    const measurementData = await readScd30(1030);
+    const measurementData = await readScd30(103000);
 
     expect(SCD30.connect).toBeCalledTimes(1);
 
@@ -46,7 +46,7 @@ describe("readScd30", () => {
     jest.setTimeout(10000);
 
     mocked(isDataReady).mockResolvedValueOnce(false).mockResolvedValueOnce(true);
-    await readScd30(1030);
+    await readScd30(103000);
 
     expect(setTimeout).toHaveBeenCalledTimes(1);
   });
