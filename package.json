@@ -21,16 +21,18 @@
     "async-bmp280": "^1.1.1",
     "async-i2c-bus": "^1.1.0",
     "dotenv": "^16.0.3",
-    "node-fetch": "^2.6.7",
     "raspberrypi-liquid-crystal": "^1.18.0",
     "scd30-node": "^1.0.3"
   },
   "devDependencies": {
     "@types/jest": "^29.2.0",
-    "@types/node-fetch": "^2.5.12",
     "jest": "^29.2.1",
     "jest-mock-extended": "^3.0.1",
     "ts-jest": "^29.0.3",
     "typescript": "^4.8.4"
+  },
+  "engines": {
+    "node": "22",
+    "npm": "10"
   }
 }

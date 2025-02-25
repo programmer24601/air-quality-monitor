@@ -1,9 +1,12 @@
 import { Measurement } from "./types/Measurement";
 import { writeToInfluxDb } from "./writeToInfluxDb";
-import fetch, { Response } from "node-fetch";
 import { mocked } from "jest-mock";
 
-jest.mock("node-fetch", () => jest.fn());
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve({ test: 100 })
+  })
+) as jest.Mock;
 
 describe("writeToInfluxDb", () => {
   global.fetch = jest.fn();

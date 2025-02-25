@@ -1,6 +1,5 @@
 import { InfluxDbParams } from "./types/InfluxDbParams";
 import { Measurement } from "./types/Measurement";
-import fetch from "node-fetch";
 
 export const writeToInfluxDb = async (measurement: Measurement): Promise<void> => {
   const influxDbParams = getInfluxDbParams();
