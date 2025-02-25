@@ -1,9 +1,6 @@
 import { SCD30 } from "scd30-node";
 import { Measurement, MeasurementData } from "../types/Measurement";
 import { writeToInfluxDb } from "../writeToInfluxDb";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const dataReadinessWaitPeriod = 500; //ms
 const measurementInterval = 2000; //ms

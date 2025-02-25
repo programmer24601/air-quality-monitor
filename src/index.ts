@@ -2,12 +2,9 @@
 import { readScd30 } from "./readScd30";
 import { Measurement, MeasurementData } from "./types/Measurement";
 import { writeToInfluxDb } from "./writeToInfluxDb";
-import dotenv from "dotenv";
 import { writeToDisplay } from "./writeToDisplay";
 import { readBmp280 } from "./readBmp280";
 import { calculateMeanSeaLevelPressure } from "./calculateMeanSeaLevelPressure";
-
-dotenv.config();
 
 const logSensorReadings = (measurementData: MeasurementData): void => {
   console.log(`CO2 Concentration: ${measurementData.co2Concentration} ppm`);
