@@ -1,32 +1,35 @@
+import { afterEach, describe, expect, it, test, vi } from "vitest";
 import { writeToDisplay } from "./writeToDisplay";
 import { MeasurementData } from "./types/Measurement";
 import LCD from "raspberrypi-liquid-crystal";
 
-const mockPrint = jest.fn();
-const mockPrintLine = jest.fn();
-const mockSetCursor = jest.fn();
-const mockCreateChar = jest.fn();
-const mockBegin = jest.fn();
-const mockNoDisplay = jest.fn();
-const mockDisplay = jest.fn();
+const mockPrint = vi.fn();
+const mockPrintLine = vi.fn();
+const mockSetCursor = vi.fn();
+const mockCreateChar = vi.fn();
+const mockBegin = vi.fn();
+const mockNoDisplay = vi.fn();
+const mockDisplay = vi.fn();
 
-jest.mock("raspberrypi-liquid-crystal", () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      begin: mockBegin,
-      clear: jest.fn(),
-      noDisplay: mockNoDisplay,
-      display: mockDisplay,
-      print: mockPrint,
-      printLine: mockPrintLine,
-      setCursor: mockSetCursor,
-      createChar: mockCreateChar
-    };
-  });
+vi.mock("raspberrypi-liquid-crystal", () => {
+  return {
+    default: vi.fn().mockImplementation(() => {
+      return {
+        begin: mockBegin,
+        clear: vi.fn(),
+        noDisplay: mockNoDisplay,
+        display: mockDisplay,
+        print: mockPrint,
+        printLine: mockPrintLine,
+        setCursor: mockSetCursor,
+        createChar: mockCreateChar
+      };
+    })
+  };
 });
 
 afterEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe("writeToDisplay", () => {
@@ -39,7 +42,7 @@ describe("writeToDisplay", () => {
   };
 
   it("should connect to display and print out measurements", async () => {
-    const mockGetChar = jest.fn().mockReturnValue("string");
+    const mockGetChar = vi.fn().mockReturnValue("string");
     LCD.getChar = mockGetChar;
 
     await writeToDisplay(measurementData);
@@ -89,9 +92,9 @@ describe("writeToDisplay", () => {
       display: number;
       begin: number;
     }) => {
-      jest.useFakeTimers().setSystemTime(new Date(datetime));
+      vi.useFakeTimers().setSystemTime(new Date(datetime));
 
-      const mockGetChar = jest.fn().mockReturnValue("string");
+      const mockGetChar = vi.fn().mockReturnValue("string");
       LCD.getChar = mockGetChar;
 
       await writeToDisplay(measurementData);

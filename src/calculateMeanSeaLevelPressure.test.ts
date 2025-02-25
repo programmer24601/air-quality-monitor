@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { calculateMeanSeaLevelPressure } from "./calculateMeanSeaLevelPressure";
 
 describe("calculateMeanSeaLevelPressure", () => {

@@ -1,13 +1,14 @@
+import { describe, expect, it, vi } from "vitest";
+import { mockDeep } from "vitest-mock-extended";
 import { BusInterface } from "async-i2c-bus";
 import { BMP280Interface } from "async-bmp280";
 import { readBmp280 } from "./readBmp280";
-import { mockDeep } from "jest-mock-extended";
 
-jest.mock("async-bmp280");
-jest.mock("async-i2c-bus");
+vi.mock("async-bmp280");
+vi.mock("async-i2c-bus");
 
 const i2cMock = mockDeep<BusInterface>();
-i2cMock.open.mockImplementation(jest.fn());
+i2cMock.open.mockImplementation(vi.fn());
 
 const bmp280Mock = mockDeep<BMP280Interface>();
 bmp280Mock.readPressure.mockResolvedValue(102000);

@@ -1,15 +1,20 @@
+import { describe, expect, it, Mock, vi } from "vitest";
 import { Measurement } from "./types/Measurement";
 import { writeToInfluxDb } from "./writeToInfluxDb";
-import { mocked } from "jest-mock";
 
-global.fetch = jest.fn(() =>
+global.fetch = vi.fn(() =>
   Promise.resolve({
     json: () => Promise.resolve({ test: 100 })
   })
-) as jest.Mock;
+) as Mock;
+
+vi.stubEnv("INFLUXDB_API_KEY", "ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj");
+vi.stubEnv("INFLUXDB_BASE_URL", "http://localhost:8086");
+vi.stubEnv("INFLUXDB_ORG_NAME", "my_organisation");
+vi.stubEnv("INFLUXDB_BUCKET_NAME", "data");
 
 describe("writeToInfluxDb", () => {
-  global.fetch = jest.fn();
+  global.fetch = vi.fn();
   it("should call fetch with correct parameters", async () => {
     const measurement: Measurement = {
       name: "measurement",
@@ -24,7 +29,7 @@ describe("writeToInfluxDb", () => {
       }
     };
     const response = { status: 204, statusText: "No Content" } as unknown as Response;
-    mocked(fetch).mockResolvedValue(response);
+    vi.mocked(fetch).mockResolvedValue(response);
 
     await writeToInfluxDb(measurement);
 

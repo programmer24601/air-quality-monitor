@@ -1,22 +1,22 @@
+import { afterEach, describe, expect, it, test, vi } from "vitest";
 import { readScd30 } from "./readScd30";
 import { SCD30 } from "scd30-node";
-import { mocked } from "jest-mock";
 import { Scd30MeasurementData } from "./types/Measurement";
 
-jest.mock("scd30-node");
-jest.spyOn(global, "setTimeout");
+vi.mock("scd30-node");
+vi.spyOn(globalThis, "setTimeout");
 
-const isDataReady = jest.fn().mockResolvedValue(true);
+const isDataReady = vi.fn().mockResolvedValue(true);
 
-const mockStaticConnect = jest.fn().mockImplementation(() => {
+const mockStaticConnect = vi.fn().mockImplementation(() => {
   return {
-    startContinuousMeasurement: jest.fn(),
-    readMeasurement: jest.fn().mockResolvedValue({
+    startContinuousMeasurement: vi.fn(),
+    readMeasurement: vi.fn().mockResolvedValue({
       co2Concentration: 450,
       temperature: 20,
       relativeHumidity: 45
     }),
-    disconnect: jest.fn(),
+    disconnect: vi.fn(),
     isDataReady
   };
 });
@@ -24,7 +24,7 @@ const mockStaticConnect = jest.fn().mockImplementation(() => {
 SCD30.connect = mockStaticConnect;
 
 afterEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe("readScd30", () => {
@@ -42,12 +42,14 @@ describe("readScd30", () => {
     expect(measurementData).toEqual(expectedMeasurementData);
   });
 
-  it("should call setTimeout when data is not ready", async () => {
-    jest.setTimeout(10000);
-
-    mocked(isDataReady).mockResolvedValueOnce(false).mockResolvedValueOnce(true);
-    await readScd30(103000);
-
-    expect(setTimeout).toHaveBeenCalledTimes(1);
-  });
+  it(
+    "should call setTimeout when data is not ready",
+    async () => {
+      vi.mocked(isDataReady).mockResolvedValueOnce(false).mockResolvedValueOnce(true);
+      await readScd30(103000);
+  
+      expect(setTimeout).toHaveBeenCalledTimes(1);
+    },
+    10000 // Set timeout for this test
+  );  
 });
