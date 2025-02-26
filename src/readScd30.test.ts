@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, test, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { readScd30 } from "./readScd30";
 import { SCD30 } from "scd30-node";
 import { Scd30MeasurementData } from "./types/Measurement";
