@@ -5,8 +5,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const dataReadinessWaitPeriod = 500; //ms
-const measurementInterval = 2000; //ms
+const dataReadinessWaitPeriod = 1000; //ms
+const measurementInterval = 10000; //ms
 const timeBeforeRecalibration = 300000; //ms
 const timeAfterRecalibration = 60000; //ms
 const localPressure = parseInt(process.env.LOCAL_PRESSURE!, 10);
