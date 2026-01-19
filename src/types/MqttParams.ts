@@ -4,4 +4,7 @@ export type MqttParams = {
   password?: string;
   clientId?: string;
   topicPrefix: string;
+  deviceName: string;
+  deviceId: string;
+  enableHomeAssistantDiscovery: boolean;
 };

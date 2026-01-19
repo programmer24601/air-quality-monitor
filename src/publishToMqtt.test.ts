@@ -45,7 +45,10 @@ describe("publishToMqtt", () => {
     process.env.MQTT_USERNAME = "testuser";
     process.env.MQTT_PASSWORD = "testpass";
     process.env.MQTT_CLIENT_ID = "test-client";
-    process.env.MQTT_TOPIC_PREFIX = "test/sensors";
+    process.env.MQTT_TOPIC_PREFIX = "homeassistant/sensor";
+    process.env.MQTT_DEVICE_NAME = "Test Device";
+    process.env.MQTT_DEVICE_ID = "test_device_01";
+    process.env.MQTT_ENABLE_HA_DISCOVERY = "true";
   });
 
   afterEach(() => {
@@ -54,6 +57,9 @@ describe("publishToMqtt", () => {
     delete process.env.MQTT_PASSWORD;
     delete process.env.MQTT_CLIENT_ID;
     delete process.env.MQTT_TOPIC_PREFIX;
+    delete process.env.MQTT_DEVICE_NAME;
+    delete process.env.MQTT_DEVICE_ID;
+    delete process.env.MQTT_ENABLE_HA_DISCOVERY;
   });
 
   it("should connect to MQTT broker with correct parameters", async () => {
@@ -76,7 +82,7 @@ describe("publishToMqtt", () => {
     });
   });
 
-  it("should publish individual sensor readings to separate topics", async () => {
+  it("should publish Home Assistant discovery configs and state topics", async () => {
     const measurementData: MeasurementData = {
       co2Concentration: 900,
       relativeHumidity: 45,
@@ -87,65 +93,34 @@ describe("publishToMqtt", () => {
 
     await publishToMqtt(measurementData);
 
-    // Check that publish was called for each sensor reading plus summary
-    expect(mockClient.publish).toHaveBeenCalledTimes(6);
+    // Should publish discovery configs (5) + state topics (5) = 10 total
+    expect(mockClient.publish).toHaveBeenCalledTimes(10);
 
-    // Check individual topics
+    // Check discovery topics
     expect(mockClient.publish).toHaveBeenCalledWith(
-      "test/sensors/co2_concentration",
-      expect.stringContaining('"value":900'),
+      "homeassistant/sensor/test_device_01_co2_concentration/config",
+      expect.stringContaining('"device_class":"carbon_dioxide"'),
       { qos: 1 },
       expect.any(Function)
     );
 
+    // Check state topics
     expect(mockClient.publish).toHaveBeenCalledWith(
-      "test/sensors/relative_humidity",
-      expect.stringContaining('"value":45'),
+      "homeassistant/sensor/test_device_01_co2_concentration/state",
+      "900",
       { qos: 1 },
       expect.any(Function)
     );
-
+    
     expect(mockClient.publish).toHaveBeenCalledWith(
-      "test/sensors/scd30_temperature",
-      expect.stringContaining('"value":20'),
-      { qos: 1 },
-      expect.any(Function)
-    );
-
-    expect(mockClient.publish).toHaveBeenCalledWith(
-      "test/sensors/bmp280_temperature",
-      expect.stringContaining('"value":19'),
-      { qos: 1 },
-      expect.any(Function)
-    );
-
-    expect(mockClient.publish).toHaveBeenCalledWith(
-      "test/sensors/mean_sea_level_pressure",
-      expect.stringContaining('"value":1030'),
+      "homeassistant/sensor/test_device_01_relative_humidity/state",
+      "45",
       { qos: 1 },
       expect.any(Function)
     );
   });
 
-  it("should publish summary data to summary topic", async () => {
-    const measurementData: MeasurementData = {
-      co2Concentration: 900,
-      relativeHumidity: 45,
-      scd30Temperature: 20,
-      bmp280Temperature: 19,
-      meanSeaLevelPressure: 1030
-    };
-    await publishToMqtt(measurementData);
-
-    expect(mockClient.publish).toHaveBeenCalledWith(
-      "test/sensors/summary",
-      expect.stringContaining('"co2Concentration":900'),
-      { qos: 1 },
-      expect.any(Function)
-    );
-  });
-
-  it("should include proper payload structure with units and timestamp", async () => {
+  it("should include Home Assistant device information in discovery config", async () => {
     const measurementData: MeasurementData = {
       co2Concentration: 900,
       relativeHumidity: 45,
@@ -156,18 +131,49 @@ describe("publishToMqtt", () => {
 
     await publishToMqtt(measurementData);
 
-    // Get the first call's payload and parse it
-    const call = (mockClient.publish as jest.Mock).mock.calls.find(
-      (call) => call[0] === "test/sensors/co2_concentration"
+    // Get a discovery config call and parse it
+    const discoveryCall = (mockClient.publish as jest.Mock).mock.calls.find(
+      (call) => call[0].includes("/config")
     );
-    const payload = JSON.parse(call[1]);
+    const config = JSON.parse(discoveryCall[1]);
 
-    expect(payload).toMatchObject({
-      value: 900,
-      unit: "ppm"
+    expect(config).toMatchObject({
+      device: {
+        identifiers: ["test_device_01"],
+        name: "Test Device",
+        model: "Air Quality Monitor",
+        manufacturer: "DIY",
+        sw_version: "1.0.0"
+      }
     });
-    expect(payload.timestamp).toBeDefined();
-    expect(new Date(payload.timestamp)).toBeInstanceOf(Date);
+  });
+
+  it("should include proper discovery config structure", async () => {
+    const measurementData: MeasurementData = {
+      co2Concentration: 900,
+      relativeHumidity: 45,
+      scd30Temperature: 20,
+      bmp280Temperature: 19,
+      meanSeaLevelPressure: 1030
+    };
+
+    await publishToMqtt(measurementData);
+
+    // Get the CO2 discovery config payload
+    const discoveryCall = (mockClient.publish as jest.Mock).mock.calls.find(
+      (call) => call[0] === "homeassistant/sensor/test_device_01_co2_concentration/config"
+    );
+    const config = JSON.parse(discoveryCall[1]);
+
+    expect(config).toMatchObject({
+      name: "CO₂ Concentration",
+      unique_id: "test_device_01_co2_concentration",
+      state_topic: "homeassistant/sensor/test_device_01_co2_concentration/state",
+      unit_of_measurement: "ppm",
+      device_class: "carbon_dioxide",
+      state_class: "measurement",
+      icon: "mdi:molecule-co2"
+    });
   });
 
   it("should disconnect from MQTT broker after publishing", async () => {
@@ -187,6 +193,9 @@ describe("publishToMqtt", () => {
   it("should use default values when environment variables are not set", async () => {
     delete process.env.MQTT_CLIENT_ID;
     delete process.env.MQTT_TOPIC_PREFIX;
+    delete process.env.MQTT_DEVICE_NAME;
+    delete process.env.MQTT_DEVICE_ID;
+    delete process.env.MQTT_ENABLE_HA_DISCOVERY;
 
     const measurementData: MeasurementData = {
       co2Concentration: 900,
@@ -206,8 +215,9 @@ describe("publishToMqtt", () => {
       connectTimeout: 30000
     });
 
+    // Should still publish with defaults (discovery enabled by default)
     expect(mockClient.publish).toHaveBeenCalledWith(
-      "sensors/air-quality/co2_concentration",
+      "homeassistant/sensor/air_quality_monitor_01_co2_concentration/config",
       expect.any(String),
       { qos: 1 },
       expect.any(Function)

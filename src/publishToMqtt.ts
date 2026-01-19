@@ -1,6 +1,8 @@
 import { MqttParams } from "./types/MqttParams";
 import { MeasurementData } from "./types/MeasurementData";
 import * as mqtt from "mqtt";
+import { getSensorConfig } from "./getSensorConfig";
+import { camelToSnakeCase } from "./utils/camelToSnakeCase";
 
 export const publishToMqtt = async (measurementData: MeasurementData): Promise<void> => {
   const mqttParams = getMqttParams();
@@ -20,7 +22,10 @@ const getMqttParams = (): MqttParams => {
     username: process.env.MQTT_USERNAME,
     password: process.env.MQTT_PASSWORD,
     clientId: process.env.MQTT_CLIENT_ID || `air-quality-monitor-${Date.now()}`,
-    topicPrefix: process.env.MQTT_TOPIC_PREFIX || "sensors/air-quality"
+    topicPrefix: process.env.MQTT_TOPIC_PREFIX || "homeassistant/sensor",
+    deviceName: process.env.MQTT_DEVICE_NAME || "Air Quality Monitor",
+    deviceId: process.env.MQTT_DEVICE_ID || "air_quality_monitor_01",
+    enableHomeAssistantDiscovery: process.env.MQTT_ENABLE_HA_DISCOVERY !== "false"
   };
 };
 
@@ -59,29 +64,35 @@ const publishMeasurementData = async (
   topicPrefix: string,
   measurementData: MeasurementData
 ): Promise<void> => {
+  const mqttParams = getMqttParams();
   const promises: Promise<void>[] = [];
 
-  // Publish each sensor reading to individual topics
-  Object.entries(measurementData).forEach(([key, value]) => {
-    const topic = `${topicPrefix}/${camelToSnakeCase(key)}`;
-    const payload = JSON.stringify({
-      value,
-      unit: getSensorUnit(key),
-      timestamp: new Date().toISOString()
+  // Publish Home Assistant discovery configurations if enabled
+  if (mqttParams.enableHomeAssistantDiscovery) {
+    Object.entries(measurementData).forEach(([key]) => {
+      promises.push(publishHomeAssistantDiscovery(client, mqttParams, key));
     });
+  }
 
-    promises.push(publishToTopic(client, topic, payload));
+  // Publish each sensor reading to Home Assistant friendly state topics
+  Object.entries(measurementData).forEach(([key, value]) => {
+    const stateTopic = `${topicPrefix}/${mqttParams.deviceId}_${camelToSnakeCase(key)}/state`;
+    promises.push(publishToTopic(client, stateTopic, (value as number).toString()));
   });
-
-  // Publish aggregated data to a summary topic
-  const summaryTopic = `${topicPrefix}/summary`;
-  const summaryPayload = JSON.stringify({
-    ...measurementData,
-    timestamp: new Date().toISOString()
-  });
-  promises.push(publishToTopic(client, summaryTopic, summaryPayload));
 
   await Promise.all(promises);
+};
+
+const publishHomeAssistantDiscovery = async (
+  client: mqtt.MqttClient,
+  mqttParams: MqttParams,
+  sensorKey: string
+): Promise<void> => {
+  const sensorConfig = getSensorConfig(sensorKey, mqttParams);
+  const discoveryTopic = `${mqttParams.topicPrefix}/${mqttParams.deviceId}_${camelToSnakeCase(sensorKey)}/config`;
+  const discoveryPayload = JSON.stringify(sensorConfig);
+
+  return publishToTopic(client, discoveryTopic, discoveryPayload);
 };
 
 const publishToTopic = (client: mqtt.MqttClient, topic: string, payload: string): Promise<void> => {
@@ -96,18 +107,3 @@ const publishToTopic = (client: mqtt.MqttClient, topic: string, payload: string)
     });
   });
 };
-
-const getSensorUnit = (sensorKey: string): string => {
-  const units: { [key: string]: string } = {
-    co2Concentration: "ppm",
-    bmp280Temperature: "°C",
-    scd30Temperature: "°C",
-    relativeHumidity: "%",
-    meanSeaLevelPressure: "hPa"
-  };
-
-  return units[sensorKey] || "";
-};
-
-const camelToSnakeCase = (string: string) =>
-  string.replace(/[A-Z]/g, (upperCaseLetter) => `_${upperCaseLetter.toLowerCase()}`);
