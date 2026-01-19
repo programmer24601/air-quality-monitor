@@ -1,6 +1,6 @@
 import { Bus } from "async-i2c-bus";
 import { BMP280 } from "async-bmp280";
-import { Bmp280MeasurementData } from "./types/Measurement";
+import { Bmp280MeasurementData } from "./types/MeasurementData";
 
 export const readBmp280 = async (): Promise<Bmp280MeasurementData> => {
 

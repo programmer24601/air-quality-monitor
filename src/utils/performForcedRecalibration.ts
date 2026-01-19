@@ -1,7 +1,7 @@
-import { SCD30 } from "scd30-node";
-import { Measurement, MeasurementData } from "../types/Measurement";
-import { writeToInfluxDb } from "../writeToInfluxDb";
 import dotenv from "dotenv";
+import { SCD30 } from "scd30-node";
+import type { MeasurementData } from "../types/MeasurementData";
+import { publishToMqtt } from "src/publishToMqtt";
 
 dotenv.config();
 
@@ -27,16 +27,11 @@ const readMeasurements = async (scd30: SCD30) => {
     scd30Temperature: scd30Measurement.temperature,
     relativeHumidity: scd30Measurement.relativeHumidity,
     meanSeaLevelPressure: localPressure
-}
-
-  const measurement: Measurement = {
-    name: process.env.INFLUXDB_MEASUREMENT_NAME!,
-    tagKey: process.env.INFLUXDB_MEASUREMENT_TAG_KEY!,
-    tagValue: process.env.INFLUXDB_MEASUREMENT_TAG_VALUE!,
-    data: measurementData
   };
 
-  await writeToInfluxDb(measurement);
+  await publishToMqtt(measurementData).catch((error): unknown =>
+    console.error("Error: ", error.message)
+  );
 
   await new Promise((resolve) => setTimeout(resolve, measurementInterval));
 };

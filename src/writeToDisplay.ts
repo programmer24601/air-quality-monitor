@@ -1,5 +1,5 @@
 import LCD from "raspberrypi-liquid-crystal";
-import { FormattedMeasurementData, MeasurementData } from "./types/Measurement";
+import { FormattedMeasurementData, MeasurementData } from "./types/MeasurementData";
 
 export const writeToDisplay = async (measurementData: MeasurementData): Promise<void> => {
   const i2cBus = 1;

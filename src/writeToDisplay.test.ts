@@ -1,5 +1,5 @@
 import { writeToDisplay } from "./writeToDisplay";
-import { MeasurementData } from "./types/Measurement";
+import { MeasurementData } from "./types/MeasurementData";
 import LCD from "raspberrypi-liquid-crystal";
 
 const mockPrint = jest.fn();

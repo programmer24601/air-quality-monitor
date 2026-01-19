@@ -1,5 +1,5 @@
 import { SCD30 } from "scd30-node";
-import { Scd30MeasurementData } from "./types/Measurement";
+import { Scd30MeasurementData } from "./types/MeasurementData";
 
 export const readScd30 = async (localPressure: number): Promise<Scd30MeasurementData> => {
   const scd30 = await SCD30.connect();

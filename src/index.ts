@@ -1,7 +1,7 @@
 
 import { readScd30 } from "./readScd30";
-import { Measurement, MeasurementData } from "./types/Measurement";
-import { writeToInfluxDb } from "./writeToInfluxDb";
+import { MeasurementData } from "./types/MeasurementData";
+import { publishToMqtt } from "./publishToMqtt";
 import dotenv from "dotenv";
 import { writeToDisplay } from "./writeToDisplay";
 import { readBmp280 } from "./readBmp280";
@@ -32,18 +32,11 @@ const logSensorReadings = (measurementData: MeasurementData): void => {
       meanSeaLevelPressure: meanSeaLevelPressure
   }
 
-    const measurement: Measurement = {
-      name: process.env.INFLUXDB_MEASUREMENT_NAME!,
-      tagKey: process.env.INFLUXDB_MEASUREMENT_TAG_KEY!,
-      tagValue: process.env.INFLUXDB_MEASUREMENT_TAG_VALUE!,
-      data: measurementData
-    };
-
-    await writeToInfluxDb(measurement).catch((error): unknown =>
+    await publishToMqtt(measurementData).catch((error): unknown =>
       console.error("Error: ", error.message)
     );
     
-    await writeToDisplay(measurement.data);
+    await writeToDisplay(measurementData);
 
     logSensorReadings(measurementData);
   } catch (error: unknown) {

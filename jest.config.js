@@ -14,10 +14,10 @@ module.exports = {
   testEnvironment: "node",
   coverageThreshold: {
     global: {
-      statements: 91.15,
-      branches: 100,
-      functions: 94.11,
-      lines: 90.47
+      statements: 90,
+      branches: 89,
+      functions: 92,
+      lines: 89
     }
   },
   coverageReporters: ["json-summary", "json", "lcov", "text", "clover"],

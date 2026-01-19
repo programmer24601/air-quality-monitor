@@ -1,4 +1,4 @@
-import { Bmp280MeasurementData } from "./types/Measurement";
+import { Bmp280MeasurementData } from "./types/MeasurementData";
 
 export const calculateMeanSeaLevelPressure = (
   bmp280MeasurementData: Bmp280MeasurementData,

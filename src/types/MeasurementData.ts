@@ -24,10 +24,3 @@ export type FormattedMeasurementData = {
   relativeHumidity: string;
   meanSeaLevelPressure: string;
 };
-
-export type Measurement = {
-  name: string;
-  tagKey: string;
-  tagValue: string;
-  data: MeasurementData;
-};

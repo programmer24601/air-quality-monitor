@@ -1,7 +1,7 @@
 import { readScd30 } from "./readScd30";
 import { SCD30 } from "scd30-node";
 import { mocked } from "jest-mock";
-import { Scd30MeasurementData } from "./types/Measurement";
+import { Scd30MeasurementData } from "./types/MeasurementData";
 
 jest.mock("scd30-node");
 jest.spyOn(global, "setTimeout");
